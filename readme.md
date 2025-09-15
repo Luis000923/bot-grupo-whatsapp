@@ -105,7 +105,7 @@ pkg install -y git nodejs-lts
 termux-setup-storage
 
 # Clona el repo y entra a la carpeta
-git clone https://github.com/Luis000923/bot2.git
+git clone git clone https://github.com/Luis000923/bot-grupo-whatsapp.git
 cd bot2
 
 # Instala dependencias
