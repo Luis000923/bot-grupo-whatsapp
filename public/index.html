@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Panel del Bot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/dashboard/styles.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Panel del Bot</h1>
+      <div class="tag">Online</div>
+    </header>
+
+    <div class="split">
+      <section class="grid compact">
+        <div class="card">
+          <h2>CPU</h2>
+          <canvas id="cpuGauge"></canvas>
+          <div class="value" id="cpuText">0%</div>
+        </div>
+        <div class="card">
+          <h2>Memoria</h2>
+          <canvas id="memPie"></canvas>
+          <div class="value" id="memText">0 / 0</div>
+        </div>
+        <div class="card">
+          <h2>Disco</h2>
+          <canvas id="diskPie"></canvas>
+          <div class="value" id="diskText">0 / 0</div>
+        </div>
+        <div class="card">
+          <h2>Actividad</h2>
+          <canvas id="activityBar"></canvas>
+          <div class="value" id="actText">Grupos: 0 · Usuarios: 0</div>
+        </div>
+        <footer>
+          <div class="small">Uptime: <span id="uptime">0s</span></div>
+        </footer>
+      </section>
+      <aside class="terminal">
+        <div class="term-header">
+          <div>Terminal</div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <select id="groupSelect"></select>
+            <button id="refreshBtn" title="Actualizar grupos">⟳</button>
+          </div>
+        </div>
+        <div id="termOutput" class="term-output"></div>
+        <div class="term-input">
+          <input id="cmdInput" placeholder="/comando" />
+          <button id="sendBtn">Enviar</button>
+        </div>
+      </aside>
+      <aside class="right-panel">
+        <div class="rp-header">Mensajes de grupos</div>
+        <div id="groupsList" class="groups-list"></div>
+        <div class="chat-view">
+          <div class="chat-header"><span id="chatTitle">Selecciona un grupo</span></div>
+          <div id="chatMessages" class="chat-messages"></div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/dashboard/main.js"></script>
+</body>
+</html>

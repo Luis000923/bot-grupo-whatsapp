@@ -1,0 +1,70 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Auth/credentials
+auth_info_baileys/
+qr_whatsapp.png
+
+# Data files
+bot_data.json
+bot_data.sqlite
+*.sqlite
+*.db
+*.db-journal
+
+# Logs
+logs/
+*.log
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Build/cache
+coverage/
+dist/
+build/
+.cache/
+# Dependencies
+node_modules/
+
+# Environment & logs
+.env
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Auth / credentials (Baileys)
+auth_info_baileys/
+
+# Local data & artifacts
+bot_data.json
+bot_data.sqlite
+*.sqlite
+*.db
+qr_whatsapp.png
+
+# Coverage / test cache
+coverage/
+.nyc_output/
+jest-cache/
+jest-html-reporters-*
+
+# Editor
+.vscode/
