@@ -7,8 +7,10 @@
     "start": "node bot.js",
     "dev": "nodemon bot.js",
     "termux": "node bot.js",
-    "install-termux": "pkg install nodejs python build-essential",
-    "setup-termux": "npm install --no-optional"
+    "install-termux": "pkg install nodejs python build-essential clang make cmake libsqlite-dev",
+    "setup-termux": "npm install --platform=android --arch=arm64 --no-optional",
+    "setup-termux-safe": "npm install --ignore-scripts",
+    "postinstall": "echo 'Instalación completada para Termux'"
   },
   "keywords": [
     "whatsapp",
@@ -29,8 +31,10 @@
   "pidusage": "^3.0.2",
     "pino": "^8.21.0",
     "qrcode": "^1.5.4",
-  "qrcode-terminal": "^0.12.0",
-  "sqlite3": "^5.1.7"
+  "qrcode-terminal": "^0.12.0"
+  },
+  "optionalDependencies": {
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
   "nodemon": "^3.0.2",

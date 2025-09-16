@@ -4,7 +4,9 @@ const pino = require('pino');
 const QRCode = require('qrcode');
 const commands = require('./commands');
 const utils = require('./utils');
-const persistence = require('./persistence');
+// Usar persistencia específica para Termux si estamos en ese entorno
+const config = require('./config');
+const persistence = config.IS_TERMUX ? require('./persistence-termux') : require('./persistence');
 const express = require('express');
 const pidusage = require('pidusage');
 const checkDiskSpace = require('check-disk-space').default;

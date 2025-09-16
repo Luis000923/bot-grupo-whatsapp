@@ -2,7 +2,9 @@
 // Enrutador de comandos y handlers
 const users = require('./users');
 const validators = require('./utils/validators');
-const persistence = require('./persistence');
+// Usar persistencia específica para Termux si estamos en ese entorno
+const config = require('./config');
+const persistence = config.IS_TERMUX ? require('./persistence-termux') : require('./persistence');
 const utils = require('./utils');
 
 // ---- Helpers para comandos aleatorios (evitar duplicación) ----
