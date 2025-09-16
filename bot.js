@@ -13,7 +13,6 @@ const checkDiskSpace = require('check-disk-space').default;
 const path = require('path');
 const http = require('http');
 const os = require('os');
-const config = require('./config');
 
 const DATA_FILE = config.IS_TERMUX ? path.join(config.TERMUX_HOME, 'bot_data.json') : './bot_data.json';
 let { events, groupIds, activity } = utils.loadData(DATA_FILE);
