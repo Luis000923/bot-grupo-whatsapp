@@ -13,7 +13,7 @@ const http = require('http');
 const os = require('os');
 const config = require('./config');
 
-const DATA_FILE = './bot_data.json';
+const DATA_FILE = config.IS_TERMUX ? path.join(config.TERMUX_HOME, 'bot_data.json') : './bot_data.json';
 let { events, groupIds, activity } = utils.loadData(DATA_FILE);
 const groupNames = {}; // id -> subject (en memoria)
 // Buffer de mensajes recientes por grupo (no persistente)
@@ -21,7 +21,7 @@ const recentMessages = Object.create(null); // { [groupId]: [{ time, sender, tex
 const MAX_MSGS_PER_GROUP = 100;
 
 function startBot() {
-    useMultiFileAuthState('auth_info_baileys').then(({ state, saveCreds }) => {
+    useMultiFileAuthState(config.AUTH_DIR).then(({ state, saveCreds }) => {
     let sock;
     // Exponer socket actual para API
     global.__CURRENT_SOCK__ = undefined;
@@ -39,8 +39,9 @@ function startBot() {
             sock.ev.on('connection.update', async (update) => {
                 const { connection, lastDisconnect, qr } = update;
                 if (qr) {
-                    QRCode.toFile('qr_whatsapp.png', qr)
-                        .then(() => console.log(' QR guardado como qr_whatsapp.png'))
+                    const qrPath = config.IS_TERMUX ? path.join(config.TERMUX_HOME, 'qr_whatsapp.png') : 'qr_whatsapp.png';
+                    QRCode.toFile(qrPath, qr)
+                        .then(() => console.log(` QR guardado como ${qrPath}`))
                         .catch((err) => console.error(' Error generando imagen QR:', err));
                     console.log(' Escanea este código QR para conectar tu bot');
                 }
@@ -72,7 +73,7 @@ function startBot() {
                             connect();
                         }, delay);
                     } else if (!shouldReconnect) {
-                        console.log('⛔ Sesión cerrada (logged out). Borra la carpeta auth_info_baileys para un nuevo QR.');
+                        console.log(`⛔ Sesión cerrada (logged out). Borra la carpeta ${config.AUTH_DIR} para un nuevo QR.`);
                     }
                 } else if (connection === 'open') {
                     console.log('✅ Bot conectado exitosamente!');
@@ -172,7 +173,7 @@ process.on('unhandledRejection', (reason) => {
 
 // ---- Dashboard y API de métricas ----
 const app = express();
-let PORT = Number(process.env.PORT) || 3000;
+let PORT = Number(process.env.PORT) || config.PORT;
 app.use(express.json());
 // Buffer de salidas para panel (no persistente)
 const panelLog = [];

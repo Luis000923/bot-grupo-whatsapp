@@ -3,12 +3,36 @@
 
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
+const fs = require('fs');
 const config = require('./config');
+
+// Usar la ruta configurada para Termux
 const DB_PATH = path.isAbsolute(config.DB_PATH) ? config.DB_PATH : path.join(__dirname, config.DB_PATH);
+
+// Asegurar que el directorio existe
+const ensureDirectoryExists = (filePath) => {
+    const dir = path.dirname(filePath);
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+    }
+};
 
 class Persistence {
     constructor() {
-        this.db = new sqlite3.Database(DB_PATH);
+        // Asegurar que el directorio de la base de datos existe
+        ensureDirectoryExists(DB_PATH);
+        
+        this.db = new sqlite3.Database(DB_PATH, (err) => {
+            if (err) {
+                console.error('Error opening database:', err.message);
+                if (config.IS_TERMUX) {
+                    console.log('Tip: Asegúrate de tener permisos de escritura en:', DB_PATH);
+                }
+            } else {
+                console.log('Database connected successfully at:', DB_PATH);
+            }
+        });
+        
         this.init();
     // Buffer para agregaciones de puntos { `${groupId}|${userId}`: count }
     this._pointsBuffer = Object.create(null);
