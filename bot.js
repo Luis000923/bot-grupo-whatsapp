@@ -40,11 +40,11 @@ function startBot() {
             sock.ev.on('connection.update', async (update) => {
                 const { connection, lastDisconnect, qr } = update;
                 if (qr) {
-                    const qrPath = config.IS_TERMUX ? path.join(config.TERMUX_HOME, 'qr_whatsapp.png') : 'qr_whatsapp.png';
+                    const qrPath = path.join(__dirname, 'qr_whatsapp.png');
                     QRCode.toFile(qrPath, qr)
-                        .then(() => console.log(` QR guardado como ${qrPath}`))
-                        .catch((err) => console.error(' Error generando imagen QR:', err));
-                    console.log(' Escanea este código QR para conectar tu bot');
+                        .then(() => console.log(`QR guardado como ${qrPath}`))
+                        .catch((err) => console.error(`Error generando imagen QR:`, err));
+                    console.log('Escanea el código QR desde el dashboard web o el archivo qr_whatsapp.png en el proyecto');
                 }
                 if (connection === 'close') {
                     const errObj = lastDisconnect?.error;
@@ -220,6 +220,21 @@ app.get('/api/metrics', async (req, res) => {
     }
 });
 
+
+// Servir la imagen QR para el dashboard
+app.get('/qr', (req, res) => {
+    const qrPath = path.join(__dirname, 'qr_whatsapp.png');
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
+    res.set('Surrogate-Control', 'no-store');
+    res.sendFile(qrPath, (err) => {
+        if (err) {
+            res.status(404).send('QR no encontrado');
+        }
+    });
+});
+
 app.use('/dashboard', express.static(path.join(__dirname, 'public')));
 
 // Listar grupos (intenta obtener desde API de WhatsApp; si no, usa memoria)
@@ -292,20 +307,6 @@ async function handlePanelCommand({ groupId, text }, res){
     if (!cmd.startsWith('/')) cmd = `/${cmd}`;
     const sockRef = global.__CURRENT_SOCK__;
     if (!sockRef) return res.status(503).json({ error: 'socket no disponible' });
-    const outputs = [];
-    const proxySock = new Proxy(sockRef, {
-        get(target, prop){
-            if (prop === 'sendMessage'){
-                return (jid, content) => {
-                    const t = (content && content.text) || JSON.stringify(content);
-                    outputs.push({ groupId: jid, text: t });
-                    pushPanel({ groupId: jid, text: t });
-                    return Promise.resolve();
-                };
-            }
-            return target[prop];
-        }
-    });
 
     // Excepción: /ms debe realmente enviar el mensaje al grupo
     const isMS = /^\/ms(\s|$)/i.test(cmd);

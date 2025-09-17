@@ -10,6 +10,15 @@
 </head>
 <body>
   <div class="container">
+    <section class="card" style="margin-bottom:24px;">
+      <h2>Escanea el QR de WhatsApp</h2>
+      <div id="qrSection">
+        <img id="qrImg" src="/qr" alt="QR de WhatsApp" style="max-width:300px;max-height:300px;border:2px solid #333;border-radius:8px;box-shadow:0 2px 8px #0002;display:block;margin:auto;" />
+        <br>
+        <a id="qrDownload" href="/qr" download="qr_whatsapp.png" class="button">Descargar QR</a>
+      </div>
+      <div class="small">Si no ves el QR, asegúrate de que el bot esté corriendo y el QR haya sido generado. La imagen se guarda en la galería y aquí.</div>
+    </section>
     <header>
       <h1>Panel del Bot</h1>
       <div class="tag">Online</div>
@@ -67,6 +76,19 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Forzar recarga del QR para evitar caché
+    const refreshQr = () => {
+      const img = document.getElementById('qrImg');
+      if (img) {
+        img.src = '/qr?t=' + Date.now();
+        const link = document.getElementById('qrDownload');
+        if (link) link.href = img.src;
+      }
+    };
+    setInterval(refreshQr, 5000);
+    window.addEventListener('load', refreshQr);
+  </script>
   <script src="/dashboard/main.js"></script>
 </body>
 </html>
